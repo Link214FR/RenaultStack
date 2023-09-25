@@ -1,0 +1,36 @@
+version: '2.1'
+
+networks:
+  monitor-net:
+    external:
+      name: monitor
+
+services:
+
+  evgateway:
+    build: ./myev
+    volumes:
+      - ./myev/app/vehicleCredentials.json:/app/vehicleCredentials.json
+    restart: unless-stopped
+    expose:
+      - 8181
+#    ports:
+#      - "8181:8181"
+    networks:
+      - monitor-net
+    
+  jsonexporter:
+    image: quay.io/prometheuscommunity/json-exporter
+    container_name: jsonexporter
+    volumes:
+      - ./jsonexporter/config.yml:/config.yml
+    command:
+      - '--config.file=/config.yml'
+    restart: unless-stopped
+    expose:
+      - 7979
+#    ports:
+#      - "7979:7979"
+    networks:
+      - monitor-net
+

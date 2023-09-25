@@ -1,0 +1,50 @@
+version: '3.8'
+
+networks:
+  monitor-net:
+    external:
+      name: monitor
+
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    networks:
+      - monitor-net
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+      - ./authelia/snippets:/snippets
+
+  authelia:
+    image: authelia/authelia
+    networks:
+      - monitor-net
+    volumes:
+      - ./authelia/config:/config
+    expose:
+      - 9091
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    networks:
+      - monitor-net
+    volumes:
+      - ./authelia/redis:/data
+    expose:
+      - 6379
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+

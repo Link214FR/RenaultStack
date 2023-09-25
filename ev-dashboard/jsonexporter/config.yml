@@ -1,0 +1,99 @@
+---
+modules:
+  default:
+    metrics:
+    - name: ev_total_Mileage
+      path: "{ .totalMileage }"
+      help: Example of a top-level global value scrape in the json
+      labels:
+        vin: '{.vin}'
+    - name: ev_battery_Level
+      path: "{ .batteryLevel }"
+      labels:
+        vin: '{.vin}'
+    - name: ev_battery_Temperature
+      path: "{ .batteryTemperature }"
+      labels:
+        vin: '{.vin}'
+    - name: ev_battery_Autonomy
+      path: "{ .batteryAutonomy }"
+      labels:
+        vin: '{.vin}'
+    - name: ev_battery_Available_Energy
+      path: "{ .batteryAvailableEnergy }"
+      labels:
+        vin: '{.vin}'
+        plugged: '{.plugStatus}'
+        charging: '{.chargingStatus}'
+    - name: ev_plug_status
+      path: "{ .plugStatus }"
+      labels:
+        vin: '{.vin}'
+    - name: ev_charging_status
+      path: "{ .chargingStatus }"
+      labels:
+        vin: '{.vin}'
+    - name: ev_charging_remaining_time
+      path: "{ .chargingRemainingTime }"
+      labels:
+        vin: '{.vin}'
+        plugged: '{.plugStatus}'
+        charging: '{.chargingStatus}'
+    - name: ev_charging_instant_power
+      path: "{ .chargingInstantaneousPower }"
+      labels:
+        vin: '{.vin}'
+        plugged: '{.plugStatus}'
+        charging: '{.chargingStatus}'
+    - name: ev_gps_location
+      path: 1
+      labels:
+        vin: '{.vin}'
+        plugged: '{.plugStatus}'
+        charging: '{.chargingStatus}'
+        updatetime: '{.lastUpdateTime}'
+        latitude: '{ .gpsLatitude }'
+        longitude: '{ .gpsLongitude }'
+#    - name: example_timestamped_value
+#      path: '{ .values[?(@.state == "INACTIVE")] }'
+#      epochTimestamp: "{ .timestamp }"
+#      help: Example of a timestamped value scrape in the json
+#      labels:
+#        environment: beta # static label
+#    - name: example_value
+#      type: object
+#      help: Example of sub-level value scrapes from a json
+#      path: '{.values[?(@.state == "ACTIVE")]}'
+#      labels:
+#        environment: beta # static label
+#        id: '{.id}'          # dynamic label
+#      values:
+#        active: 1      # static value
+#        count: '{.count}' # dynamic value
+#        boolean: '{.some_boolean}'
+    headers:
+      X-Dummy: my-test-header
+
+    # If 'body' is set, it will be sent by the exporter as the body content in the scrape request. The HTTP method will also be set as 'POST' in this case.
+    # body:
+    #   content: |
+    #     {"time_diff": "1m25s", "anotherVar": "some value"}
+
+    # The body content can also be a Go Template (https://golang.org/pkg/text/template), with all the functions from the Sprig library (https://masterminds.github.io/sprig/) available. All the query parameters sent by prometheus in the scrape query to the exporter, are available in the template.
+    # body:
+    #   content: |
+    #     {"time_diff": "{{ duration `95` }}","anotherVar": "{{ .myVal | first }}"}
+    #   templatize: true
+
+    # For full http client config parameters, ref: https://pkg.go.dev/github.com/prometheus/common/config?tab=doc#HTTPClientConfig
+    #
+    # http_client_config:
+    #   tls_config:
+    #     insecure_skip_verify: true
+    #   basic_auth:
+    #     username: myuser
+    #     #password: veryverysecret
+    #     password_file: /tmp/mysecret.txt
+
+    # Accepted status codes for this probe. Defaults to 2xx.
+    # valid_status_codes: [ <int>, ... | default = 2xx ]
